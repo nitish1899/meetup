@@ -11,9 +11,6 @@ export class SignupDto {
     @IsEmail()
     email!: string;
 
-    @IsOptional()
-    profileImage!: string | null;
-
     @IsString()
     password!: string;
 

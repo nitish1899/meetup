@@ -37,7 +37,6 @@ export class UserService {
       name: data.name,
       email: data.email,
       phone: data.phone,
-      profileImage: data.profileImage,
     });
 
     await this.em.flush();
@@ -66,6 +65,7 @@ export class UserService {
     const [users, totalCount] = await this.em.findAndCount(User, options, {
       limit: pageSize,
       offset: offset,
+      fields: ['id', 'name', 'email', 'phone']
     });
 
     return {

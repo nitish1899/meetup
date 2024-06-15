@@ -44,7 +44,7 @@ export class AuthService {
 
     const hashPin = await bcrypt.hash(dto.password.toString(), 10);
 
-    const newUser = new User({ name: dto.name, email: dto.email, phone: dto.phone, password: hashPin, profileImage: dto.profileImage });
+    const newUser = new User({ name: dto.name, email: dto.email, phone: dto.phone, password: hashPin });
 
     await this.em.persistAndFlush(newUser);
 

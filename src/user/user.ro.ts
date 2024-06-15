@@ -12,6 +12,5 @@ export class UserRO {
     this.name = user.name;
     this.email = user.email;
     this.phone = user.phone;
-    this.profileImage = user.profileImage;
   }
 }
