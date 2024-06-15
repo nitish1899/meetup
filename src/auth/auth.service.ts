@@ -10,7 +10,7 @@ import { SuccessRO } from 'src/common/success.ro';
 import { SignupDto } from './dto/signup.dto';
 import { AuthRO } from './auth.ro';
 import { LoginDto } from './dto/login.dto';
-const bcrypt = require("bcrypt");
+import bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -62,7 +62,7 @@ export class AuthService {
       }
 
       return new AuthRO(this.getJwtToken(existingUser.id, dto.email));
-    } catch (error) {
+    } catch (error: any) {
       return { error: error?.message }
     }
   }

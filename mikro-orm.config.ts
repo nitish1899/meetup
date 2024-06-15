@@ -4,14 +4,26 @@ import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
 import { Migrator } from '@mikro-orm/migrations';
 import dotenv from 'dotenv';
-dotenv.config();
 
+dotenv.config();
 const logger = new Logger('MikroORM');
 const config: Options = {
   entities: ['dist/**/*.entity.js'],
   entitiesTs: ['src/**/*.entity.ts'],
   driver: PostgreSqlDriver,
-  clientUrl: process.env['DATABASE_URL'] as string,
+  dbName: process.env.DBNAME,
+  host: process.env.DBHOST,
+  password: process.env.DBPASSWORD,
+  user: process.env.DBUSER,
+  port: Number(process.env.DBPORT),
+  driverOptions: {
+    connection: {
+      ssl: {
+        rejectUnauthorized: true,
+        ca: process.env.CA_CERTIFICATE
+      },
+    },
+  },
   highlighter: new SqlHighlighter(),
   debug: true,
   logger: logger.log.bind(logger),
