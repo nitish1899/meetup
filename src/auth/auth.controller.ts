@@ -1,30 +1,24 @@
-import {
-  Controller,
-  Get,
-  Query,
-  Redirect,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express';
+import { SuccessRO } from 'src/common/success.ro';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { SignupDto } from './dto/signup.dto';
+import { LoginDto } from './dto/login.dto';
 
-@Controller()
+@ApiTags('User')
+@Controller('user')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
-  @Get('google')
-  @UseGuards(AuthGuard('google'))
-  async handleGoogleAuth() {}
+  @ApiOkResponse({ type: SuccessRO })
+  @Post('/signup')
+  signup(@Body() dto: SignupDto) {
+    return this.authService.signup(dto);
+  }
 
-  @Redirect()
-  @Get('google/redirect')
-  @UseGuards(AuthGuard('google'))
-  handleGoogleAuthRedirect(
-    @Req() req: Request,
-    @Query('state') redirectUrl?: string,
-  ) {
-    return this.authService.handleGoogleSignin(req, redirectUrl);
+  @ApiOkResponse({ type: SuccessRO })
+  @Post('/login')
+  login(@Body() dto: LoginDto) {
+    return this.authService.login(dto);
   }
 }

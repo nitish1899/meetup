@@ -9,6 +9,7 @@ import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
 import { SuccessRO } from 'src/common/success.ro';
 import { SignupDto } from './dto/signup.dto';
 import { AuthRO } from './auth.ro';
+import { LoginDto } from './dto/login.dto';
 const bcrypt = require("bcrypt");
 
 @Injectable()
@@ -37,11 +38,11 @@ export class AuthService {
       throw new BadRequestException('User already exists');
     }
 
-    if (dto.pin !== dto.confirmPin) {
+    if (dto.password !== dto.confirmPassword) {
       throw new BadRequestException('Please enter same confirm pin');
     }
 
-    const hashPin = await bcrypt.hash(dto.pin.toString(), 10);
+    const hashPin = await bcrypt.hash(dto.password.toString(), 10);
 
     const newUser = new User({ name: dto.name, email: dto.email, phone: dto.phone, password: hashPin, profileImage: dto.profileImage });
 
@@ -50,17 +51,17 @@ export class AuthService {
     return new SuccessRO('Registered Successfully');
   }
 
-  async login({ email, password }: { email: string, password: string }) {
+  async login(dto: LoginDto) {
     try {
-      const existingUser = await this.userRepository.findOneOrFail({ email });
+      const existingUser = await this.userRepository.findOneOrFail({ email: dto.email });
 
-      const isPinCorrect = await bcrypt.compare(password.toString(), existingUser.password);
+      const isPinCorrect = await bcrypt.compare(dto.password.toString(), existingUser.password);
 
       if (!isPinCorrect) {
         throw new BadRequestException('Please enter the valid pin');
       }
 
-      return new AuthRO(this.getJwtToken(existingUser.id, email));
+      return new AuthRO(this.getJwtToken(existingUser.id, dto.email));
     } catch (error) {
       return { error: error?.message }
     }

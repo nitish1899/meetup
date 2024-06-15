@@ -15,8 +15,8 @@ export class SignupDto {
     profileImage!: string | null;
 
     @IsString()
-    pin!: string;
+    password!: string;
 
     @IsString()
-    confirmPin!: string;
+    confirmPassword!: string;
 }
