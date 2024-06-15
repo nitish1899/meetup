@@ -6,19 +6,8 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { AuthModule } from './auth/auth.module';
 import { JwtMiddleware } from './common/JwtMiddleware';
 import config from 'mikro-orm.config';
-import { omit } from 'lodash';
-
-
-const testDbUrl = 'postgresql://postgres:testdb@localhost:5460/postgres';
 
 const getMikroORMConfig = async () => {
-  const isTest = process.env.NODE_ENV === 'test';
-  if (isTest) {
-    return {
-      ...omit(config, 'driverOptions'),
-      clientUrl: testDbUrl,
-    };
-  }
   return config;
 };
 

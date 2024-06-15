@@ -1,49 +1,41 @@
 import { Logger, NotFoundException } from '@nestjs/common';
-import { Options } from '@mikro-orm/core';
-import { PostgreSqlDriver } from '@mikro-orm/postgresql';
+import { LoadStrategy, defineConfig } from '@mikro-orm/core';
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
+import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
+import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { Migrator } from '@mikro-orm/migrations';
-import dotenv from 'dotenv';
 
-dotenv.config();
+import 'dotenv/config';
+
 const logger = new Logger('MikroORM');
-const config: Options = {
+
+const config = defineConfig({
   entities: ['dist/**/*.entity.js'],
   entitiesTs: ['src/**/*.entity.ts'],
   driver: PostgreSqlDriver,
-  dbName: process.env.DBNAME,
-  host: process.env.DBHOST,
-  password: process.env.DBPASSWORD,
-  user: process.env.DBUSER,
-  port: Number(process.env.DBPORT),
-  driverOptions: {
-    connection: {
-      ssl: {
-        rejectUnauthorized: true,
-        ca: process.env.CA_CERTIFICATE
-      },
-    },
-  },
+  loadStrategy: LoadStrategy.JOINED,
+  clientUrl: process.env['DATABASE_URL'] as string,
   highlighter: new SqlHighlighter(),
   debug: true,
   logger: logger.log.bind(logger),
+  metadataProvider: TsMorphMetadataProvider,
   allowGlobalContext: true,
   migrations: {
-    tableName: 'mikro_orm_migrations', // name of database table with log of executed transactions
-    path: './migrations', // path to the folder with migrations
-    // @ts-expect-error we should not use any
-    pattern: /^[\w-]+\d+\.ts$/, // regex pattern for the migration files
-    transactional: true, // wrap each migration in a transaction
-    disableForeignKeys: true, // wrap statements with `set foreign_key_checks = 0` or equivalent
-    allOrNothing: true, // wrap all migrations in master transaction
-    dropTables: false, // allow to disable table dropping
-    safe: true, // allow to disable table and column dropping
+    tableName: 'mikro_orm_migrations',
+    path: './migrations',
+    glob: '!(*.d).{js,ts}',
+    transactional: true,
+    disableForeignKeys: true,
+    allOrNothing: true,
+    dropTables: false,
+    safe: true,
     emit: 'ts', // migration generation mode
   },
-  findOneOrFailHandler: (entityName: string) => {
+  extensions: [Migrator],
+  findOneOrFailHandler: (entityName) => {
     throw new NotFoundException(`${entityName} not found`);
   },
-  extensions: [Migrator],
-};
+});
 
 export default config;
+

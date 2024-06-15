@@ -5,7 +5,6 @@ export class UserRO {
   name: string;
   email: string | null;
   phone: number | null;
-  profileImage: string | null;
 
   constructor(user: User) {
     this.id = user.id;

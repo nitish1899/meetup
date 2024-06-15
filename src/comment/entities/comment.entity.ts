@@ -15,7 +15,7 @@ export class Comment extends BaseEntity {
     user: User;
 
     @ManyToOne({ entity: () => Comment, nullable: true })
-    refComment: Comment;
+    refComment: Comment | null;
 
     constructor({ message, user, refComment }: { message: string, user: User, refComment: Comment | null }) {
         super();
