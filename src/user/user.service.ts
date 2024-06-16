@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityManager, EntityRepository, FilterQuery, wrap } from '@mikro-orm/postgresql';
-import { UpdateUserDto } from './dto/update-user-dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UserRO } from './user.ro';
 import { AuthService } from 'src/auth/auth.service';
 import { SuccessRO } from 'src/common/success.ro';

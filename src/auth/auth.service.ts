@@ -10,7 +10,7 @@ import { SuccessRO } from 'src/common/success.ro';
 import { SignupDto } from './dto/signup.dto';
 import { AuthRO } from './auth.ro';
 import { LoginDto } from './dto/login.dto';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {

@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { UserRO } from './user.ro';
 import { Auth } from '../common/decorators/user.decorator';
-import { UpdateUserDto } from './dto/update-user-dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthRO } from 'src/auth/auth.ro';
 import { User } from 'src/common/decorators/user.decorator';
 import { SuccessRO } from 'src/common/success.ro';
